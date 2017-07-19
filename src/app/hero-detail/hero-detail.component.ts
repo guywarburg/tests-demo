@@ -24,7 +24,6 @@ export class HeroDetailComponent implements OnChanges {
   createForm() {
     this.heroForm = this.fb.group({
       name: '',
-      secretLairs: this.fb.array([]),
       power: '',
       sidekick: ''
     });
@@ -34,21 +33,12 @@ export class HeroDetailComponent implements OnChanges {
     this.heroForm.reset({
       name: this.hero.name
     });
-    this.setAddresses(this.hero.addresses);
   }
-
-  get secretLairs(): FormArray {
-    return this.heroForm.get('secretLairs') as FormArray;
-  };
 
   setAddresses(addresses: Address[]) {
     const addressFGs = addresses.map(address => this.fb.group(address));
     const addressFormArray = this.fb.array(addressFGs);
     this.heroForm.setControl('secretLairs', addressFormArray);
-  }
-
-  addLair() {
-    this.secretLairs.push(this.fb.group(new Address()));
   }
 
   onSubmit() {
@@ -57,7 +47,13 @@ export class HeroDetailComponent implements OnChanges {
   }
 
   validateForm() {
-    if (this.heroForm.valid && this.addressIsValid()) {
+    if (this.heroForm.controls.name !== undefined &&
+      this.heroForm.controls.power !== undefined
+      && this.sidekickExists()) {
+      // and an additional validation:
+      // hero name is unique ...
+
+      // save and POST hero
       this.hero = this.prepareSaveHero();
       this.heroService.updateHero(this.hero).subscribe(/* error handling */);
     } else {
@@ -69,24 +65,16 @@ export class HeroDetailComponent implements OnChanges {
 
   prepareSaveHero(): Hero {
     const formModel = this.heroForm.value;
-
-    // deep copy of form model lairs
-    const secretLairsDeepCopy: Address[] = formModel.secretLairs.map(
-      (address: Address) => Object.assign({}, address)
-    );
-
     // return new `Hero` object containing a combination of original hero value(s)
     // and deep copies of changed form model values
     const saveHero: Hero = {
       id: this.hero.id,
-      name: formModel.name as string,
-      // addresses: formModel.secretLairs // <-- bad!
-      addresses: secretLairsDeepCopy
+      name: formModel.name as string
     };
     return saveHero;
   }
 
-  addressIsValid() {
+  sidekickExists() {
     // AJAX test if address is real
     return true;
   }

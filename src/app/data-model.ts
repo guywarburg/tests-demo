@@ -1,7 +1,6 @@
 export class Hero {
   id = 0;
   name = '';
-  addresses: Address[];
 }
 
 export class Address {
@@ -14,23 +13,15 @@ export class Address {
 export const heroes: Hero[] = [
   {
     id: 1,
-    name: 'Whirlwind',
-    addresses: [
-      {street: '123 Main',  city: 'Anywhere', state: 'CA',  zip: '94801'},
-      {street: '456 Maple', city: 'Somewhere', state: 'VA', zip: '23226'},
-    ]
+    name: 'Whirlwind'
   },
   {
     id: 2,
-    name: 'Bombastic',
-    addresses: [
-      {street: '789 Elm',  city: 'Smallville', state: 'OH',  zip: '04501'},
-    ]
+    name: 'Bombastic'
   },
   {
     id: 3,
-    name: 'Magneta',
-    addresses: [ ]
+    name: 'Magneta'
   },
 ];
 
