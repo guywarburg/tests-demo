@@ -56,8 +56,6 @@ export class HeroDetailComponent implements OnChanges {
       // save and POST hero
       this.hero = this.prepareSaveHero();
       this.heroService.updateHero(this.hero).subscribe(/* error handling */);
-    } else {
-      return;
     }
   }
 
