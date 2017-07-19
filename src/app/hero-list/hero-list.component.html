@@ -3,12 +3,12 @@
 
 <nav>
   <button (click)="getHeroes()" class="btn btn-primary">Refresh</button>
-  <a *ngFor="let hero of heroes | async" (click)="select(hero)">{{hero.name}}</a>
+  <!--<a *ngFor="let hero of heroes | async" (click)="select(hero)">{{hero.name}}</a>-->
 </nav>
 
 <div *ngIf="selectedHero">
   <hr>
   <h2>Hero Detail</h2>
   <h3>Editing: {{selectedHero.name}}</h3>
-  <hero-detail [hero]="selectedHero"></hero-detail>
+  <hero-detail></hero-detail>
 </div>

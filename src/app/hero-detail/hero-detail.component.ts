@@ -1,22 +1,39 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import {Component, Input, OnChanges} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
-import { Address, Hero, states } from '../data-model';
-import { HeroService } from '../hero-service';
+import {Address, Hero, states} from '../data-model';
+import {HeroService} from '../hero-service';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'hero-detail',
   templateUrl: './hero-detail.component.html'
 })
 export class HeroDetailComponent implements OnChanges {
-  @Input() hero: Hero;
+  hero: Hero = {
+    id: 1,
+    name: 'Whirlwind'
+  };
+  heroes: Hero[] = [
+    {
+      id: 1,
+      name: 'Whirlwind'
+    },
+    {
+      id: 2,
+      name: 'Bombastic'
+    },
+    {
+      id: 3,
+      name: 'Magneta'
+    },
+  ];
 
   heroForm: FormGroup;
   states = states;
 
-  constructor(
-    private fb: FormBuilder,
-    private heroService: HeroService) {
+  constructor(private fb: FormBuilder,
+              private heroService: HeroService) {
 
     this.createForm();
   }
@@ -35,33 +52,25 @@ export class HeroDetailComponent implements OnChanges {
     });
   }
 
-  setAddresses(addresses: Address[]) {
-    const addressFGs = addresses.map(address => this.fb.group(address));
-    const addressFormArray = this.fb.array(addressFGs);
-    this.heroForm.setControl('secretLairs', addressFormArray);
-  }
-
   onSubmit() {
-    this.validateForm();
-    this.ngOnChanges();
-  }
-
-  validateForm() {
-    if (this.heroForm.controls.name !== undefined &&
-      this.heroForm.controls.power !== undefined
-      && this.sidekickExists()) {
-      // and an additional validation:
-      // hero name is unique ...
-
-      // save and POST hero
+    if (this.validateForm(this.heroForm.value)) {
       this.hero = this.prepareSaveHero();
       this.heroService.updateHero(this.hero).subscribe(/* error handling */);
-    } else {
-      return;
+      this.ngOnChanges();
     }
   }
 
-  revert() { this.ngOnChanges(); }
+  validateForm(myForm) {
+    const isNameValid = this.testName(myForm.name as string);
+    const isPowerValid = this.testPower(myForm.power as string);
+    const isSidekickValid = this.testSidekick(myForm.sidekick as string);
+
+    return (isNameValid && isPowerValid && isSidekickValid);
+  }
+
+  revert() {
+    this.ngOnChanges();
+  }
 
   prepareSaveHero(): Hero {
     const formModel = this.heroForm.value;
@@ -74,8 +83,24 @@ export class HeroDetailComponent implements OnChanges {
     return saveHero;
   }
 
-  sidekickExists() {
-    // AJAX test if address is real
+  testName(name: string): boolean {
+    if (!isNullOrUndefined(name)) {
+      return !(this.heroes.filter(hero => {
+        return hero.name === name;
+      }).length);
+    }
+    return false;
+  }
+
+  testPower(power: string): boolean {
     return true;
+  }
+
+  testSidekick(sidekick: string): boolean {
+    if (!isNullOrUndefined(sidekick) && sidekick !== 'Iron-Man') {
+      // Because Iron-Man will never be sidekick
+      return true;
+    }
+    return false;
   }
 }
