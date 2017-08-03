@@ -27,6 +27,7 @@ describe('HeroDetailComponent', () => {
     expect(1 + 1).toBe(2);
   });
 
+  // Add hero
   it(`should return true for new hero name`, () => {
     component.heroes = [
       {
@@ -67,14 +68,6 @@ describe('HeroDetailComponent', () => {
     expect(test).toBeFalsy();
   });
 
-  it(`should return true if sidekick is valid`, () => {
-    expect(component.testSidekick('John')).toBeTruthy();
-  });
-
-  it(`should return false if sidekick is 'Iron-Man'`, () => {
-    expect(component.testSidekick('Iron-Man')).toBeFalsy();
-  });
-
   it(`should return false if name is null`, () => {
     component.heroes = [
       {
@@ -95,6 +88,16 @@ describe('HeroDetailComponent', () => {
     expect(test).toBeFalsy();
   });
 
+  // Test sidekick
+  it(`should return true if sidekick is valid`, () => {
+    expect(component.testSidekick('John')).toBeTruthy();
+  });
+
+  it(`should return false if sidekick is 'Iron-Man'`, () => {
+    expect(component.testSidekick('Iron-Man')).toBeFalsy();
+  });
+
+  // Form validation
   it(`should return true if form params are valid`, () => {
     component.heroForm.controls['name'].setValue('TEST');
     component.heroForm.controls['power'].setValue('SUPER POWER');
