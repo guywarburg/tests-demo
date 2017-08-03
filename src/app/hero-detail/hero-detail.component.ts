@@ -97,8 +97,13 @@ export class HeroDetailComponent implements OnChanges {
   }
 
   testSidekick(sidekick: string): boolean {
-    if (!isNullOrUndefined(sidekick) && sidekick !== 'Iron-Man') {
-      // Because Iron-Man will never be sidekick
+    if (!isNullOrUndefined(sidekick)) {
+      // some validations...
+      if (sidekick === 'Iron-Man') {
+        // Because Iron-Man will never be sidekick
+        return false;
+      }
+      // more code...
       return true;
     }
     return false;
